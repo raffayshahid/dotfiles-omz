@@ -53,6 +53,22 @@ zstyle ':completion:*:descriptions' format '%F{yellow}%d%f'
 # Match case-insensitively
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
+# ---------- Rich command completions ----------
+# Prefer flags and commands in completion listings
+zstyle ':completion:*:' group-order options commands     subcommands executables directories aliases functions builtins
+
+# Show descriptions and group results
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{yellow}%d%f'
+
+# Allow the menu to use the available terminal height
+zstyle -e ':autocomplete:*:*' list-lines     'reply=( $(( LINES > 8 ? LINES - 5 : 3 )) )'
+
+# Start showing suggestions after one character
+zstyle ':autocomplete:*' min-input 1
+zstyle ':autocomplete:*' delay 0.05
+zstyle ':autocomplete:*' timeout 2
+
 zinit light marlonrichert/zsh-autocomplete
 
 # Fish-style command suggestions
@@ -60,6 +76,36 @@ zinit light zsh-users/zsh-autosuggestions
 
 # Oh My Zsh Git plugin (without the framework)
 zinit snippet OMZP::git
+
+# ---------- Additional developer plugins ----------
+
+# Kubernetes aliases and completions
+zinit snippet OMZP::kubectl
+
+# Docker helpers
+zinit snippet OMZP::docker
+
+# Rust / Cargo completions
+zinit snippet OMZP::rust
+
+# Discover existing aliases
+zinit snippet OMZP::alias-finder
+
+# Homebrew helpers
+zinit snippet OMZP::brew
+
+# GitHub helpers
+zinit snippet OMZP::gh
+
+# Readable man pages
+zinit snippet OMZP::colored-man-pages
+
+# Smart directory navigation
+eval "$(zoxide init zsh)"
+
+# Fuzzy finding
+source <(fzf --zsh)
+
 
 # Fast syntax highlighting: load last
 # Disabled conflicting highlighter: zinit light zdharma-continuum/fast-syntax-highlighting
@@ -75,7 +121,6 @@ export STARSHIP_LOG=error
 
 # Original aliases
 alias c="clear"
-alias l="ls -la"
 
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
@@ -102,3 +147,18 @@ fi
 # Open the interactive completion menu with Tab
 bindkey '^I' menu-select
 [[ -n "$terminfo[kcbt]" ]] && bindkey "$terminfo[kcbt]" menu-select
+
+# ---------- Colored command output ----------
+export CLICOLOR=1
+export LSCOLORS="GxFxCxDxBxegedabagaced"
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
+
+# ---------- Modern file listings (eza) ----------
+if (( $+commands[eza] )); then
+    alias ls='eza --icons=auto --color=auto --group-directories-first'
+    alias l='eza -la --icons=auto --color=auto --group-directories-first --git'
+    alias ll='eza -l --icons=auto --color=auto --group-directories-first --git'
+    alias la='eza -a --icons=auto --color=auto --group-directories-first'
+    alias lt='eza --tree --level=2 --icons=auto --color=auto --group-directories-first'
+fi
