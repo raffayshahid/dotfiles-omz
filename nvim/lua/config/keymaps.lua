@@ -1,3 +1,8 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
+
+-- Cmd + Esc (forwarded by terminal as F13)
+vim.keymap.set("n", "<F13>", vim.lsp.buf.definition, {
+  desc = "Go to Definition",
+})
